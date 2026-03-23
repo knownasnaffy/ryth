@@ -58,10 +58,15 @@
 <h2>CONNECT</h2>
 <p> &lt;SSID&gt; [--password &lt;PASSWORD&gt;] [--help]</p>
 <p>Connect to a network by SSID</p>
+<p><b>Arguments:</b></p>
+<dl>
+<dt><b>&lt;SSID&gt;</b></dt>
+<dd>The network name (SSID) as a UTF-8 string.</dd>
+</dl>
 <p><b>Options:</b></p>
 <dl>
 <dt><b>--password</b> &lt;PASSWORD&gt;</dt>
-<dd></dd>
+<dd>Passphrase for the network. Omit for open networks.</dd>
 <dt><b>-h, --help</b></dt>
 <dd>Print help</dd>
 </dl>
@@ -80,6 +85,13 @@
 <h2>AUTOCONNECT</h2>
 <p> &lt;SSID&gt; &lt;STATE&gt; [--help]</p>
 <p>Toggle autoconnect for a known network</p>
+<p><b>Arguments:</b></p>
+<dl>
+<dt><b>&lt;SSID&gt;</b></dt>
+<dd>The network name (SSID) as a UTF-8 string.</dd>
+<dt><b>&lt;STATE&gt;</b></dt>
+<dd>Either <b>on</b> or <b>off</b>.</dd>
+</dl>
 <p><b>Options:</b></p>
 <dl>
 <dt><b>-h, --help</b></dt>
@@ -90,6 +102,11 @@
 <h2>FORGET</h2>
 <p> &lt;SSID&gt; [--help]</p>
 <p>Forget a known network</p>
+<p><b>Arguments:</b></p>
+<dl>
+<dt><b>&lt;SSID&gt;</b></dt>
+<dd>The network name (SSID) as a UTF-8 string.</dd>
+</dl>
 <p><b>Options:</b></p>
 <dl>
 <dt><b>-h, --help</b></dt>
@@ -110,6 +127,11 @@
 <h2>POWER</h2>
 <p> &lt;STATE&gt; [--help]</p>
 <p>Toggle wifi power</p>
+<p><b>Arguments:</b></p>
+<dl>
+<dt><b>&lt;STATE&gt;</b></dt>
+<dd>Either <b>on</b> or <b>off</b>.</dd>
+</dl>
 <p><b>Options:</b></p>
 <dl>
 <dt><b>-h, --help</b></dt>

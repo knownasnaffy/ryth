@@ -86,6 +86,29 @@ fn build_roff(cmd: &clap::Command) -> String {
         writeln!(r, ".PP").unwrap();
         writeln!(r, "{about}").unwrap();
 
+        // Positional arguments
+        let positionals: Vec<_> = sub.get_arguments()
+            .filter(|a| !a.is_hide_set() && a.is_positional())
+            .collect();
+        if !positionals.is_empty() {
+            writeln!(r, ".PP").unwrap();
+            writeln!(r, "\\fBArguments:\\fR").unwrap();
+            for arg in positionals {
+                let val = arg.get_value_names()
+                    .and_then(|v| v.first())
+                    .map(|s| s.as_str())
+                    .unwrap_or(arg.get_id().as_str());
+                let desc = match val {
+                    "SSID"     => "The network name (SSID) as a UTF-8 string.",
+                    "STATE"    => "Either \\fBon\\fR or \\fBoff\\fR.",
+                    _          => "",
+                };
+                writeln!(r, ".TP").unwrap();
+                writeln!(r, "\\fB<{val}>\\fR").unwrap();
+                writeln!(r, "{desc}").unwrap();
+            }
+        }
+
         // Options
         let args: Vec<_> = sub.get_arguments()
             .filter(|a| !a.is_hide_set() && !a.is_positional())
@@ -109,7 +132,12 @@ fn build_roff(cmd: &clap::Command) -> String {
                 } else {
                     String::new()
                 };
-                let help = arg.get_help().map(|s| s.to_string()).unwrap_or_default();
+                let help = arg.get_help().map(|s| s.to_string()).unwrap_or_else(|| {
+                    match arg.get_long() {
+                        Some("password") => "Passphrase for the network. Omit for open networks.".into(),
+                        _ => String::new(),
+                    }
+                });
                 writeln!(r, ".TP").unwrap();
                 writeln!(r, "\\fB{flag}\\fR{val_suffix}").unwrap();
                 writeln!(r, "{help}").unwrap();

@@ -50,10 +50,15 @@ Print help
 .PP
 Connect to a network by SSID
 .PP
+\fBArguments:\fR
+.TP
+\fB<SSID>\fR
+The network name (SSID) as a UTF-8 string.
+.PP
 \fBOptions:\fR
 .TP
 \fB\-\-password\fR <PASSWORD>
-
+Passphrase for the network. Omit for open networks.
 .TP
 \fB\-h, \-\-help\fR
 Print help
@@ -73,6 +78,14 @@ Print help
 .PP
 Toggle autoconnect for a known network
 .PP
+\fBArguments:\fR
+.TP
+\fB<SSID>\fR
+The network name (SSID) as a UTF-8 string.
+.TP
+\fB<STATE>\fR
+Either \fBon\fR or \fBoff\fR.
+.PP
 \fBOptions:\fR
 .TP
 \fB\-h, \-\-help\fR
@@ -82,6 +95,11 @@ Print help
  <SSID> [\-\-help]
 .PP
 Forget a known network
+.PP
+\fBArguments:\fR
+.TP
+\fB<SSID>\fR
+The network name (SSID) as a UTF-8 string.
 .PP
 \fBOptions:\fR
 .TP
@@ -102,6 +120,11 @@ Print help
  <STATE> [\-\-help]
 .PP
 Toggle wifi power
+.PP
+\fBArguments:\fR
+.TP
+\fB<STATE>\fR
+Either \fBon\fR or \fBoff\fR.
 .PP
 \fBOptions:\fR
 .TP
