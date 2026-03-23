@@ -4,7 +4,7 @@ Scriptable interface to [iwd](https://iwd.wiki.kernel.org/). Wraps [iwdrs](https
 
 Built for scripts and status widgets. Not a replacement for `iwctl`. Felt a need for it since quickshell doesn't support iwd as a backend, yet.
 
-> For those who care. Yes. AI-assisted.
+> For those who care: Yes. AI-assisted.
 
 ## Commands
 

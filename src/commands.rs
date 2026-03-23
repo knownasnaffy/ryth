@@ -6,6 +6,11 @@ use ryth::output::{KnownEntry, NetworkEntry, Status, signal_to_strength};
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
+fn print_json(v: &impl serde::Serialize) -> Result<()> {
+    println!("{}", serde_json::to_string(v)?);
+    Ok(())
+}
+
 async fn get_station(session: &Session) -> Result<iwdrs::station::Station> {
     session
         .stations()
@@ -47,26 +52,19 @@ async fn build_status(session: &Session) -> Result<Status> {
 
     let (ssid, strength) = if matches!(state, State::Connected) {
         let networks = station.discovered_networks().await?;
-        let mut found_ssid = None;
-        let mut found_strength = None;
+        let mut result = (None, None);
         for (net, sig) in &networks {
             if net.connected().await.unwrap_or(false) {
-                found_ssid = net.name().await.ok();
-                found_strength = Some(signal_to_strength(*sig));
+                result = (net.name().await.ok(), Some(signal_to_strength(*sig)));
                 break;
             }
         }
-        (found_ssid, found_strength)
+        result
     } else {
         (None, None)
     };
 
-    Ok(Status {
-        powered,
-        state: state.to_string().to_lowercase(),
-        ssid,
-        strength,
-    })
+    Ok(Status { powered, state: state.to_string().to_lowercase(), ssid, strength })
 }
 
 // ── commands ─────────────────────────────────────────────────────────────────
@@ -75,7 +73,7 @@ pub async fn status(watch: bool) -> Result<()> {
     let session = Session::new().await?;
     if !watch {
         let s = build_status(&session).await?;
-        println!("{}", serde_json::to_string(&s)?);
+        print_json(&s)?;
         return Ok(());
     }
 
@@ -83,9 +81,8 @@ pub async fn status(watch: bool) -> Result<()> {
     let mut state_stream = station.state_stream().await?;
     while let Some(state_res) = state_stream.next().await {
         let _ = state_res?;
-        let session2 = Session::new().await?;
-        let s = build_status(&session2).await?;
-        println!("{}", serde_json::to_string(&s)?);
+        let s = build_status(&session).await?;
+        print_json(&s)?;
     }
     Ok(())
 }
@@ -96,13 +93,13 @@ pub async fn list(watch: bool) -> Result<()> {
 
     if !watch {
         let entries = network_entries(&station).await?;
-        println!("{}", serde_json::to_string(&entries)?);
+        print_json(&entries)?;
         return Ok(());
     }
 
     loop {
         let entries = network_entries(&station).await?;
-        println!("{}", serde_json::to_string(&entries)?);
+        print_json(&entries)?;
         // wait for a full scan cycle: Scanning=true then Scanning=false
         station.scan().await.ok(); // trigger if not already scanning; ignore error if busy
         station.wait_for_scan_complete().await?;
@@ -115,7 +112,7 @@ pub async fn scan() -> Result<()> {
     station.scan().await?;
     station.wait_for_scan_complete().await?;
     let entries = network_entries(&station).await?;
-    println!("{}", serde_json::to_string(&entries)?);
+    print_json(&entries)?;
     Ok(())
 }
 
@@ -184,7 +181,7 @@ pub async fn known() -> Result<()> {
             last_connected: kn.last_connected_time().await.ok(),
         });
     }
-    println!("{}", serde_json::to_string(&entries)?);
+    print_json(&entries)?;
     Ok(())
 }
 
