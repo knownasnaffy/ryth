@@ -12,43 +12,114 @@
 </section>
 <section>
 <h2>SYNOPSIS</h2>
-<p><b>ryth</b> [<b>-h</b>|<b>--help</b>] &lt;<em>subcommands</em>&gt;</p>
+<p>&lt;command&gt; [options]</p>
 </section>
 <section>
 <h2>DESCRIPTION</h2>
-<p>Scriptable iwd interface</p>
+<p>ryth is a scriptable interface to the iwd wifi backend.</p>
+<p>All output is JSON. Designed for use in scripts and automation widgets.</p>
+<p>Device and station are selected automatically.</p>
 </section>
 <section>
-<h2>OPTIONS</h2>
+<h2>STATUS</h2>
+<p> [--watch] [--help]</p>
+<p>Current wifi status (state, signal, powered, etc.)</p>
+<p><b>Options:</b></p>
 <dl>
-<dt><b>-h</b>, <b>--help</b></dt>
+<dt><b>--watch</b></dt>
+<dd>Stream updates on change</dd>
+<dt><b>-h, --help</b></dt>
 <dd>Print help</dd>
 </dl>
 </section>
 <section>
-<h2>SUBCOMMANDS</h2>
+<h2>LIST</h2>
+<p> [--watch] [--help]</p>
+<p>List discovered networks (cached)</p>
+<p><b>Options:</b></p>
 <dl>
-<dt>ryth-status(1)</dt>
-<dd>Current wifi status (state, signal, powered, etc.)</dd>
-<dt>ryth-list(1)</dt>
-<dd>List discovered networks (cached)</dd>
-<dt>ryth-scan(1)</dt>
-<dd>Trigger a scan and return updated network list</dd>
-<dt>ryth-connect(1)</dt>
-<dd>Connect to a network by SSID</dd>
-<dt>ryth-disconnect(1)</dt>
-<dd>Disconnect from the current network</dd>
-<dt>ryth-autoconnect(1)</dt>
-<dd>Toggle autoconnect for a known network</dd>
-<dt>ryth-forget(1)</dt>
-<dd>Forget a known network</dd>
-<dt>ryth-known(1)</dt>
-<dd>List known networks</dd>
-<dt>ryth-power(1)</dt>
-<dd>Toggle wifi power</dd>
-<dt>ryth-help(1)</dt>
-<dd>Print this message or the help of the given subcommand(s)</dd>
+<dt><b>--watch</b></dt>
+<dd>Re-output on each scan cycle</dd>
+<dt><b>-h, --help</b></dt>
+<dd>Print help</dd>
 </dl>
+</section>
+<section>
+<h2>SCAN</h2>
+<p> [--help]</p>
+<p>Trigger a scan and return updated network list</p>
+<p><b>Options:</b></p>
+<dl>
+<dt><b>-h, --help</b></dt>
+<dd>Print help</dd>
+</dl>
+</section>
+<section>
+<h2>CONNECT</h2>
+<p> &lt;SSID&gt; [--password &lt;PASSWORD&gt;] [--help]</p>
+<p>Connect to a network by SSID</p>
+<p><b>Options:</b></p>
+<dl>
+<dt><b>--password</b> &lt;PASSWORD&gt;</dt>
+<dd></dd>
+<dt><b>-h, --help</b></dt>
+<dd>Print help</dd>
+</dl>
+</section>
+<section>
+<h2>DISCONNECT</h2>
+<p> [--help]</p>
+<p>Disconnect from the current network</p>
+<p><b>Options:</b></p>
+<dl>
+<dt><b>-h, --help</b></dt>
+<dd>Print help</dd>
+</dl>
+</section>
+<section>
+<h2>AUTOCONNECT</h2>
+<p> &lt;SSID&gt; &lt;STATE&gt; [--help]</p>
+<p>Toggle autoconnect for a known network</p>
+<p><b>Options:</b></p>
+<dl>
+<dt><b>-h, --help</b></dt>
+<dd>Print help</dd>
+</dl>
+</section>
+<section>
+<h2>FORGET</h2>
+<p> &lt;SSID&gt; [--help]</p>
+<p>Forget a known network</p>
+<p><b>Options:</b></p>
+<dl>
+<dt><b>-h, --help</b></dt>
+<dd>Print help</dd>
+</dl>
+</section>
+<section>
+<h2>KNOWN</h2>
+<p> [--help]</p>
+<p>List known networks</p>
+<p><b>Options:</b></p>
+<dl>
+<dt><b>-h, --help</b></dt>
+<dd>Print help</dd>
+</dl>
+</section>
+<section>
+<h2>POWER</h2>
+<p> &lt;STATE&gt; [--help]</p>
+<p>Toggle wifi power</p>
+<p><b>Options:</b></p>
+<dl>
+<dt><b>-h, --help</b></dt>
+<dd>Print help</dd>
+</dl>
+</section>
+<section>
+<h2>OUTPUT</h2>
+<p>All commands output JSON to stdout. Errors are printed to stderr as:</p>
+<p>{"error": "message"}</p>
 </section>
 </body>
 </html>

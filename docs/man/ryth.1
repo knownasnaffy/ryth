@@ -1,44 +1,113 @@
-.ie \n(.g .ds Aq \(aq
-.el .ds Aq '
-.TH ryth 1  "ryth " 
+.TH "RYTH" "1"
 .SH NAME
 ryth \- Scriptable iwd interface
 .SH SYNOPSIS
-\fBryth\fR [\fB\-h\fR|\fB\-\-help\fR] <\fIsubcommands\fR>
+.B ryth
+<command> [options]
 .SH DESCRIPTION
-Scriptable iwd interface
-.SH OPTIONS
-.TP
-\fB\-h\fR, \fB\-\-help\fR
-Print help
-.SH SUBCOMMANDS
-.TP
-ryth\-status(1)
+ryth is a scriptable interface to the iwd wifi backend.
+All output is JSON. Designed for use in scripts and automation widgets.
+Device and station are selected automatically.
+.SH "STATUS"
+.B ryth status
+ [\-\-watch] [\-\-help]
+.PP
 Current wifi status (state, signal, powered, etc.)
+.PP
+\fBOptions:\fR
 .TP
-ryth\-list(1)
+\fB\-\-watch\fR
+Stream updates on change
+.TP
+\fB\-h, \-\-help\fR
+Print help
+.SH "LIST"
+.B ryth list
+ [\-\-watch] [\-\-help]
+.PP
 List discovered networks (cached)
+.PP
+\fBOptions:\fR
 .TP
-ryth\-scan(1)
+\fB\-\-watch\fR
+Re-output on each scan cycle
+.TP
+\fB\-h, \-\-help\fR
+Print help
+.SH "SCAN"
+.B ryth scan
+ [\-\-help]
+.PP
 Trigger a scan and return updated network list
+.PP
+\fBOptions:\fR
 .TP
-ryth\-connect(1)
+\fB\-h, \-\-help\fR
+Print help
+.SH "CONNECT"
+.B ryth connect
+ <SSID> [\-\-password <PASSWORD>] [\-\-help]
+.PP
 Connect to a network by SSID
+.PP
+\fBOptions:\fR
 .TP
-ryth\-disconnect(1)
+\fB\-\-password\fR <PASSWORD>
+
+.TP
+\fB\-h, \-\-help\fR
+Print help
+.SH "DISCONNECT"
+.B ryth disconnect
+ [\-\-help]
+.PP
 Disconnect from the current network
+.PP
+\fBOptions:\fR
 .TP
-ryth\-autoconnect(1)
+\fB\-h, \-\-help\fR
+Print help
+.SH "AUTOCONNECT"
+.B ryth autoconnect
+ <SSID> <STATE> [\-\-help]
+.PP
 Toggle autoconnect for a known network
+.PP
+\fBOptions:\fR
 .TP
-ryth\-forget(1)
+\fB\-h, \-\-help\fR
+Print help
+.SH "FORGET"
+.B ryth forget
+ <SSID> [\-\-help]
+.PP
 Forget a known network
+.PP
+\fBOptions:\fR
 .TP
-ryth\-known(1)
+\fB\-h, \-\-help\fR
+Print help
+.SH "KNOWN"
+.B ryth known
+ [\-\-help]
+.PP
 List known networks
+.PP
+\fBOptions:\fR
 .TP
-ryth\-power(1)
+\fB\-h, \-\-help\fR
+Print help
+.SH "POWER"
+.B ryth power
+ <STATE> [\-\-help]
+.PP
 Toggle wifi power
+.PP
+\fBOptions:\fR
 .TP
-ryth\-help(1)
-Print this message or the help of the given subcommand(s)
+\fB\-h, \-\-help\fR
+Print help
+.SH OUTPUT
+All commands output JSON to stdout. Errors are printed to stderr as:
+.PP
+{"error": "message"}
