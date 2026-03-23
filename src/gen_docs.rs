@@ -8,14 +8,14 @@ use ryth::cli::Cli;
 
 fn main() -> anyhow::Result<()> {
     let out = Path::new("docs");
-    fs::create_dir_all(out.join("man"))?;
-    fs::create_dir_all(out.join("html"))?;
+    fs::create_dir_all(out)?;
 
     let cmd = Cli::command();
     let roff = build_roff(&cmd);
 
-    fs::write(out.join("man/ryth.1"), &roff)?;
-    fs::write(out.join("html/ryth.html"), roff_to_html(&roff))?;
+    fs::write(out.join("ryth.1"), &roff)?;
+    fs::write(out.join("ryth.html"), roff_to_html(&roff))?;
+    fs::write(out.join("ryth.md"), roff_to_md(&roff))?;
 
     println!("docs written to {}", out.display());
     Ok(())
@@ -221,7 +221,11 @@ fn close_dl(body: &mut String, in_dl: &mut bool, in_dd: &mut bool) {
 
 fn strip_quotes(s: &str) -> &str { s.trim_matches('"') }
 
-fn render_inline(s: &str) -> String {
+fn render_inline(s: &str) -> String { render_inline_with(s, "<b>", "</b>", "<em>", "</em>", true) }
+
+fn render_inline_md(s: &str) -> String { render_inline_with(s, "**", "**", "_", "_", false) }
+
+fn render_inline_with(s: &str, b_open: &str, b_close: &str, i_open: &str, i_close: &str, escape_html: bool) -> String {
     let s = s.replace("\\(bu", "•").replace("\\-", "-");
     let mut out = String::with_capacity(s.len());
     let mut chars = s.chars().peekable();
@@ -232,11 +236,11 @@ fn render_inline(s: &str) -> String {
         if c == '\\' {
             match chars.next() {
                 Some('f') => match chars.next() {
-                    Some('B') => { if !bold   { out.push_str("<b>");   bold   = true; } }
-                    Some('I') => { if !italic { out.push_str("<em>");  italic = true; } }
+                    Some('B') => { if !bold   { out.push_str(b_open);  bold   = true; } }
+                    Some('I') => { if !italic { out.push_str(i_open);  italic = true; } }
                     Some('R') | Some('P') => {
-                        if bold   { out.push_str("</b>");  bold   = false; }
-                        if italic { out.push_str("</em>"); italic = false; }
+                        if bold   { out.push_str(b_close); bold   = false; }
+                        if italic { out.push_str(i_close); italic = false; }
                     }
                     Some(x) => { out.push('\\'); out.push('f'); out.push(x); }
                     None => {}
@@ -244,17 +248,57 @@ fn render_inline(s: &str) -> String {
                 Some(x) => { out.push('\\'); out.push(x); }
                 None => {}
             }
-        } else {
+        } else if escape_html {
             match c {
                 '<' => out.push_str("&lt;"),
                 '>' => out.push_str("&gt;"),
                 '&' => out.push_str("&amp;"),
                 c   => out.push(c),
             }
+        } else {
+            out.push(c);
         }
     }
 
-    if bold   { out.push_str("</b>"); }
-    if italic { out.push_str("</em>"); }
+    if bold   { out.push_str(b_close); }
+    if italic { out.push_str(i_close); }
+    out
+}
+
+/// Convert roff to Markdown.
+fn roff_to_md(roff: &str) -> String {
+    let mut out = String::from("# ryth\n\n");
+    let mut in_dl = false;
+    let mut next_is_dt = false;
+
+    for line in roff.lines() {
+        if let Some(rest) = line.strip_prefix('.') {
+            let (cmd, arg) = rest.split_once(' ').unwrap_or((rest, ""));
+            match cmd {
+                "TH" => {}
+                "SH" => {
+                    if in_dl { out.push('\n'); in_dl = false; }
+                    out.push_str(&format!("\n## {}\n\n", strip_quotes(arg)));
+                }
+                "SS" => { out.push_str(&format!("\n### {}\n\n", strip_quotes(arg))); }
+                "TP" => { next_is_dt = true; }
+                "PP" | "P" | "LP" => { out.push('\n'); }
+                _ => {}
+            }
+        } else if !line.is_empty() {
+            let rendered = render_inline_md(line);
+            if next_is_dt {
+                out.push_str(&format!("- {rendered}  \n"));
+                next_is_dt = false;
+                in_dl = true;
+            } else if in_dl {
+                out.push_str(&format!("  {rendered}\n"));
+                in_dl = false;
+            } else {
+                out.push_str(&format!("{rendered}\n"));
+            }
+        }
+    }
+
     out
 }
