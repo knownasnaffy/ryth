@@ -2,7 +2,7 @@ use anyhow::{Context, Result, bail};
 use futures_lite::stream::StreamExt;
 use iwdrs::{agent::Agent, network::Network, session::Session, station::State};
 
-use crate::output::{KnownEntry, NetworkEntry, Status, signal_to_strength};
+use ryth::output::{KnownEntry, NetworkEntry, Status, signal_to_strength};
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 

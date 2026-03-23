@@ -1,9 +1,7 @@
-mod cli;
 mod commands;
-mod output;
 
 use clap::Parser;
-use cli::{Cli, Command};
+use ryth::cli::{Cli, Command};
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
